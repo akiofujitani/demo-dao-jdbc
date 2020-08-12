@@ -55,17 +55,8 @@ public class SellerDaoJDBC implements SellerDao{
 			
 			//Associated objects
 			if (rs.next()) {
-				Department dep = new Department();					//Instantiate a temporary Department object
-				dep.setId(rs.getInt("DepartmentId"));				//Retrieves and set the desired value in temporary object
-				dep.setName(rs.getString("DepName"));				//Retrieves and set the desired value in temporary object
-				
-				Seller obj = new Seller();							//Instantiate a temporary Seller object
-				obj.setId(rs.getInt("Id"));							//Retrieves and set the desired value in temporary object
-				obj.setName(rs.getString("Name"));					//Retrieves and set the desired value in temporary object
-				obj.setEmail(rs.getString("Email"));				//Retrieves and set the desired value in temporary object
-				obj.setBaseSalary(rs.getDouble("BaseSalary"));		//Retrieves and set the desired value in temporary object
-				obj.setBirthDate(rs.getDate("BirthDate"));			//Retrieves and set the desired value in temporary object
-				obj.setDepartment(dep);								//Set the temporary Department object to the Seller object
+				Department dep = intantiateDepartment(rs);
+				Seller obj = instantiateSeller(rs, dep);
 				return obj;
 			}
 			return null;
@@ -77,6 +68,26 @@ public class SellerDaoJDBC implements SellerDao{
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
+	}
+	
+	//Function created for reuse purpuse
+	private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
+		Seller obj = new Seller();							//Instantiate a temporary Seller object
+		obj.setId(rs.getInt("Id"));							//Retrieves and set the desired value in temporary object
+		obj.setName(rs.getString("Name"));					//Retrieves and set the desired value in temporary object
+		obj.setEmail(rs.getString("Email"));				//Retrieves and set the desired value in temporary object
+		obj.setBaseSalary(rs.getDouble("BaseSalary"));		//Retrieves and set the desired value in temporary object
+		obj.setBirthDate(rs.getDate("BirthDate"));			//Retrieves and set the desired value in temporary object
+		obj.setDepartment(dep);								//Set the temporary Department object to the Seller object
+		return obj;
+	}
+
+
+	private Department intantiateDepartment(ResultSet rs) throws SQLException {
+		Department dep = new Department();					//Instantiate a temporary Department object
+		dep.setId(rs.getInt("DepartmentId"));				//Retrieves and set the desired value in temporary object
+		dep.setName(rs.getString("DepName"));				//Retrieves and set the desired value in temporary object
+		return dep;
 	}
 
 	@Override
